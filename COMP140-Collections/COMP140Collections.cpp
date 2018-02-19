@@ -3,13 +3,31 @@
 
 #include "stdafx.h"
 #include "Character.h"
+#include <algorithm>
+
+//Lambda sort
+void lambdaSort(std::vector<Character*> characters)
+{
+	//Lambda expression
+	std::sort(characters.begin(), characters.end(), [](Character* a, Character* b)
+	{
+		return a->GetName(), b->GetName();
+	});
+}
+
+bool sortByHealth(Character* a, Character* b)
+{
+	return a->GetHealth() < b->GetHealth();
+}
 
 int main(int, char**)
 {
 	int windowWidth = 800;
 	int windowHeight = 640;
+
 	//Initialise the Video Part of SDL2
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
+	{
 		//Print out an error message to the screen if this fails
 		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
 		return 1;
@@ -23,7 +41,8 @@ int main(int, char**)
 
 	//Creare a 800x640
 	SDL_Window *window = SDL_CreateWindow("Collections", 100, 100, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
-	if (window == nullptr) {
+	if (window == nullptr) 
+	{
 		//Print out error if this fails
 		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 		TTF_Quit();
@@ -33,7 +52,8 @@ int main(int, char**)
 
 	//Create a renderer
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (renderer == nullptr) {
+	if (renderer == nullptr) 
+	{
 		//Print error and cleanup
 		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
 		SDL_DestroyWindow(window);
@@ -49,11 +69,19 @@ int main(int, char**)
 		std::cout << "Unable to load font " << TTF_GetError()<<std::endl;
 	}
 
+
+
 	//create a vector of characters
 	std::vector<Character*> Characters;
+
 	//Add two characters to the vector
 	Characters.push_back(new Character("Jim", 12, 40, 0));
+	Characters.push_back(new Character("Mango", 20, 150, 50));
 	Characters.push_back(new Character("Sarah", 32, 100, 10));
+
+	//std::sort(Characters.begin(), Characters.end(), sortByHealth);
+	std::sort(Characters.begin(), Characters.end());
+	//lambdaSort(Characters);
 
 	//Make sure we do this after we have add every character to the vector
 	for (auto character : Characters)
@@ -67,11 +95,13 @@ int main(int, char**)
 	bool quit = false;
 	//Holds events coming from SDL
 	SDL_Event event;
+
 	//Game Loop, while quit is false
 	while (!quit)
 	{
 		//Check for Messages from SDL
-		while (SDL_PollEvent(&event)) {
+		while (SDL_PollEvent(&event)) 
+		{
 			switch (event.type)
 			{
 				//Quit Message
@@ -80,6 +110,7 @@ int main(int, char**)
 					quit = true;
 					break;
 				}
+
 				//Key Down
 				case SDL_KEYDOWN:
 				{
@@ -88,6 +119,13 @@ int main(int, char**)
 					{
 						quit = true;
 					}
+
+					if (event.key.keysym.sym == SDLK_s)
+					{
+						//Sort by Name
+						//std::sort(Characters.begin(), Characters.end());
+					}
+
 					break;
 				}
 			}
@@ -136,6 +174,7 @@ int main(int, char**)
 			iter++;
 		}
 	}
+
 	//cleanup!
 	TTF_CloseFont(currentFont);
 	SDL_DestroyRenderer(renderer);

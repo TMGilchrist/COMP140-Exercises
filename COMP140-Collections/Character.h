@@ -19,12 +19,27 @@ public:
 		return Name;
 	};
 
+	int GetHealth() 
+	{
+		return Health;
+	}
+
+	int GetScore() 
+	{
+		return Score;
+	}
+
 	void BuildTextureFromFont(TTF_Font* currentFont, SDL_Renderer* renderer);
 
 	SDL_Texture * GetTexture()
 	{
 		return Texture;
 	};
+
+	bool operator <(const Character& other) const
+	{
+		return Health < other.Health;
+	}
 
 private:
 	SDL_Texture *Texture;
